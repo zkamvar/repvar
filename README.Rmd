@@ -1,0 +1,51 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+# repvar
+
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+
+The goal of repvar is to find the minimum number of samples that will represent
+all variables in a data set. This was built for population genetic data, but is
+generalizable to any discrete data type that can be represented as an integer
+matrix. 
+
+## Installation
+
+This package is not currently on CRAN, but you can install it like so:
+
+```{r inst, eval = FALSE}
+# install.packages("remotes") # or devtools or ghit
+remotes::install_github("zkamvar/repvar")
+```
+
+
+## Example
+
+Here is a basic example of how you can identify the minimum set. We will use the
+pre-packaged `monilinia` data set from Everhart and Scherm 2016.
+
+```{r example}
+options(width = 120)
+
+library("repvar")
+data(monilinia)
+dim(monilinia)
+monilinia[1:10, 1:10]
+
+# extract minimum set of samples
+(i <- get_minimum_set(monilinia))
+monilinia[i, 1:10]
+```
+

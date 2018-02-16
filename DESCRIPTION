@@ -1,0 +1,22 @@
+Package: repvar
+Type: Package
+Title: Extract Samples to Represent All Variables
+Version: 0.1.0
+Depends: R (>= 3.1.0)
+Imports: stats
+Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
+    email = "zkamvar@gmail.com", comment = c(ORCID = "0000-0003-1458-7108")),
+    person(c("Sydney", "E."), "Everhart", role = c("ctb", "dtc"),
+    email = "everhart@unl.edu", comment = c(ORCID = "0000-0002-5773-1280")))
+Maintainer: Zhian N. Kamvar <zkamvar@gmail.com>
+Description: In population genetics, it's not uncommon to re-genotype sets of
+    samples to use as positive controls in future studies or for diagnostic 
+    panels. To save cost, it's often desireable to have the minimum number of
+    samples that represent all of the alleles in the data. This package provides
+    a procedure that will select these samples with alternative options. The 
+    name 'repvar' stands for 'REPresent VARiables'.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.0.1
