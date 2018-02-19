@@ -10,8 +10,10 @@
 #' i <- get_minimum_set(monilinia)
 #' i
 #' all(colSums(monilinia[i, ] > 0))
-get_minimum_set <- function(tab){
-
+get_minimum_set <- function(tab) {
+  if (is.null(rownames(tab))){
+    stop("This function requires rownames.")
+  }
   # setup -------------------------------------------------------------------
   # We want to accumulate alleles from the rarest to the most abundant. Because
   # each individual has m x p alleles, we know that we will sweep up the
@@ -35,9 +37,9 @@ get_minimum_set <- function(tab){
   samples <- integer(0)
   # sams <- rep(FALSE, nrow(tab))
   while (sum(columns_to_inspect) > 0) {
-    a <- all_counts[j]
+    a          <- all_counts[j]
     my_columns <- counts == a & columns_to_inspect
-    if (sum(my_columns) > 0){
+    if (sum(my_columns) > 0) {
       candidates <- tab[, my_columns, drop = FALSE] > 0
       candidates[is.na(candidates)] <- FALSE
 
@@ -70,16 +72,19 @@ get_minimum_set <- function(tab){
       #   sams <- tmpsamp
       # }
 
-      columns_to_inspect <- columns_to_inspect & colSums(tab[inds, , drop = FALSE], na.rm = TRUE) == 0
+      columns_to_inspect <- columns_to_inspect & colSums(tab[samples, , drop = FALSE], na.rm = TRUE) == 0
+      # cat(length(columns_to_inspect) - sum(columns_to_inspect), "variables accounted for!\r")
     }
-    if (j == length(all_counts)) break
+    if (j == length(all_counts) | sum(columns_to_inspect) == 0){
+      break
+    }
     j <- j + 1
   }
-  if (sum(columns_to_inspect) > 0){
+  if (sum(columns_to_inspect) > 0) {
     out <- paste(names(columns_to_inspect[columns_to_inspect]), collapse = ", ")
     warning(paste("the following loci are still missing:", out))
   }
-  samples
+  rownames(tab[samples, ])
 }
 
 # if (interactive()){
