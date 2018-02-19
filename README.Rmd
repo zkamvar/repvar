@@ -42,10 +42,13 @@ options(width = 120)
 library("repvar")
 data(monilinia)
 dim(monilinia)
-monilinia[1:10, 1:10]
+print.table(monilinia[1:10, 1:10], zero.print = ".")
 
-# extract minimum set of samples
-(i <- get_minimum_set(monilinia))
-monilinia[i, 1:10]
+# Shuffle the data set 200 times to find an optimal number of samples
+set.seed(2018)
+id_list <- replicate(200, get_minimum_set(monilinia[sample(nrow(monilinia)), ]))
+nsamps  <- lengths(id_list)
+prime_ids <- id_list[nsamps == min(nsamps)]
+print.table(monilinia[prime_ids[[1]], 1:10], zero.print = ".")
 ```
 
