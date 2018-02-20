@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 [![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.org/zkamvar/repvar.svg?branch=master)](https://travis-ci.org/zkamvar/repvar)
+[![Coverage status](https://codecov.io/gh/zkamvar/repvar/branch/master/graph/badge.svg)](https://codecov.io/github/zkamvar/repvar?branch=master)
 
 The goal of repvar is to find the minimum number of samples that will represent
 all variables in a data set. This was built for population genetic data, but is
