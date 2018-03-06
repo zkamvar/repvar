@@ -22,4 +22,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.0.1
 Suggests: 
     testthat,
-    covr
+    covr,
+    tibble,
+    tidyr,
+    dplyr,
+    purrr

@@ -92,3 +92,44 @@ print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
 #> A692          1          .          .         .         1          .          .          .          .           1
 #> A129          .          1          .         1         .          .          .          .          .           1
 ```
+
+Because you get a list of ids, it's good to see which ones are actually useful. For this, you can calculate entropy. We will use the tidyverse to first create a table of samples and data, calculate entropy for each row, and then join them together. In general, we will want higher entropy values.
+
+``` r
+library("tibble")
+library("dplyr")
+#> 
+#> Attaching package: 'dplyr'
+#> The following objects are masked from 'package:stats':
+#> 
+#>     filter, lag
+#> The following objects are masked from 'package:base':
+#> 
+#>     intersect, setdiff, setequal, union
+library("tidyr")
+id_df <- tibble::enframe(id_list, name = "ID", value = "samples") %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(data = list(monilinia[samples, ]))
+id_df
+#> Source: local data frame [3 x 3]
+#> Groups: <by row>
+#> 
+#> # A tibble: 3 x 3
+#>      ID samples    data           
+#>   <int> <list>     <list>         
+#> 1     1 <chr [30]> <int [30 × 95]>
+#> 2     2 <chr [30]> <int [30 × 95]>
+#> 3     3 <chr [30]> <int [30 × 95]>
+
+# Calculate entropy for each entry
+dplyr::mutate(id_df, diversity = list(entropy(monilinia[samples, ]))) %>%
+  dplyr::select(ID, diversity) %>%
+  tidyr::unnest() %>%
+  dplyr::inner_join(id_df, by = "ID")
+#> # A tibble: 3 x 6
+#>      ID    eH     G    E5 samples    data           
+#>   <int> <dbl> <dbl> <dbl> <list>     <list>         
+#> 1     1  55.2  39.7 0.714 <chr [30]> <int [30 × 95]>
+#> 2     2  55.3  39.8 0.714 <chr [30]> <int [30 × 95]>
+#> 3     3  54.7  39.1 0.708 <chr [30]> <int [30 × 95]>
+```

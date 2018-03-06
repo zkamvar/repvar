@@ -54,3 +54,24 @@ lengths(id_list)
 print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
 ```
 
+Because you get a list of ids, it's good to see which ones are actually useful.
+For this, you can calculate entropy. We will use the tidyverse to first create
+a table of samples and data, calculate entropy for each row, and then join them
+together. In general, we will want higher entropy values. 
+
+```{r tibble}
+library("tibble")
+library("dplyr")
+library("tidyr")
+id_df <- tibble::enframe(id_list, name = "ID", value = "samples") %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(data = list(monilinia[samples, ]))
+id_df
+
+# Calculate entropy for each entry
+dplyr::mutate(id_df, diversity = list(entropy(monilinia[samples, ]))) %>%
+  dplyr::select(ID, diversity) %>%
+  tidyr::unnest() %>%
+  dplyr::inner_join(id_df, by = "ID")
+```
+
