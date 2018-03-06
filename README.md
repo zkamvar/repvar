@@ -44,10 +44,22 @@ print.table(monilinia[1:10, 1:10], zero.print = ".")
 
 # Shuffle the data set 200 times to find an optimal number of samples
 set.seed(2018)
-id_list <- replicate(200, get_minimum_set(monilinia[sample(nrow(monilinia)), ]))
-nsamps  <- lengths(id_list)
-prime_ids <- id_list[nsamps == min(nsamps)]
-print.table(monilinia[prime_ids[[1]], 1:10], zero.print = ".")
+id_list <- find_samples(monilinia, n = 200, cut = TRUE)
+id_list
+#> [[1]]
+#>  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"
+#> [17] "A681" "A176" "A366" "A489" "A216" "A172" "A488" "A406" "A390" "A039" "A010" "A016" "A692" "A129"
+#> 
+#> [[2]]
+#>  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"
+#> [17] "A681" "A176" "A367" "A489" "A191" "A172" "A488" "A408" "A390" "A404" "A387" "A016" "A692" "A571"
+#> 
+#> [[3]]
+#>  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"
+#> [17] "A681" "A176" "A367" "A522" "A191" "A172" "A488" "A408" "A390" "A547" "A385" "A480" "A692" "A088"
+lengths(id_list)
+#> [1] 30 30 30
+print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
 #>      CHMFc4.224 CHMFc4.231 CHMFc4.238 CHMFc5.85 CHMFc5.97 CHMFc5.111 CHMFc5.105 CHMFc5.107 CHMFc5.113 CHMFc12.163
 #> A233          .          1          .         .         .          .          .          1          .           1
 #> A610          1          .          .         .         .          .          .          .          1           1

@@ -16,16 +16,16 @@ test_that("the data must have row names", {
 test_that("the minimum number of rows will be returned", {
   the_rows <- get_minimum_set(mat2)
   expect_length(the_rows, 10)
-  for (i in 1:10){
+  for (i in 1:10) {
     expect_match(the_rows[i], letters[i], label = letters[i])
   }
 })
 
 test_that("shuffled data will give the same result in this case", {
   set.seed(the_seed)
-  the_rows <- sort(get_minimum_set(mat2[sample(nrow(mat2)), ]))
+  the_rows <- find_samples(mat2, n = 2, sort = FALSE)[[2]]
   expect_length(the_rows, 10)
-  for (i in 1:10){
+  for (i in 1:10) {
     expect_match(the_rows[i], letters[i], label = letters[i])
   }
 })
