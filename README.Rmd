@@ -131,3 +131,11 @@ resmean_sort <- res %>%
 resmean_sort
 ```
 
+The factor can be used to color our barplot
+
+```{r barplot2, fig.width = 15, fig.height = 7}
+rd1 <- res_sort$dat[[1]] %>% colSums(na.rm = TRUE) 
+
+sort(rd1) %>%
+  barplot(las = 3, col = f[order(rd1)])
+```

@@ -203,3 +203,14 @@ resmean_sort
 #> 10    22 <chr [30]>    30 <int [30 × 95]>    95  4.61  3.57 0.712  0.694 0.00769
 #> # ... with 40 more rows
 ```
+
+The factor can be used to color our barplot
+
+``` r
+rd1 <- res_sort$dat[[1]] %>% colSums(na.rm = TRUE) 
+
+sort(rd1) %>%
+  barplot(las = 3, col = f[order(rd1)])
+```
+
+<img src="man/figures/README-barplot2-1.png" width="100%" />
