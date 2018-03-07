@@ -4,13 +4,17 @@
 \alias{entropy}
 \title{Calculate Entropy Statistics}
 \usage{
-entropy(tab)
+entropy(tab, f = NULL)
 }
 \arguments{
 \item{tab}{a numeric matrix}
+
+\item{f}{a factor that is the same length as the number of columns in \code{tab}.
+this is used to split the matrix up by groups for analysis.}
 }
 \value{
-a data frame with three columns: \code{eH}, \code{G}, \code{E5}, and \code{missing}
+a data frame with three columns: \code{eH}, \code{G}, \code{E5}, \code{lambda}, and
+\code{missing}
 }
 \description{
 Because it's possible to have multiple results with a minimum number of
@@ -24,10 +28,11 @@ variable counts.
 \itemize{
 \item eH: The exponentiation of shannon's entropy: \code{exp(sum(-x * log(x)))}
 (Shannon, 1948)
-\item G : Stoddart and Taylor's index, or inverse Simpson's
-index: \code{1/sum(x * x)} (Stoddart and Taylor, 1988; Simpson, 1949)
+\item G : Stoddart and Taylor's index, or inverse Simpson's index: \code{1/sum(x^2)}
+(Stoddart and Taylor, 1988; Simpson, 1949)
 \item E5: Evenness (5) the ratio between the above two estimates:
 \code{(G - 1)/(eH - 1)} (Pielou, 1975)
+\item lambda: Unbiased Simpson's index: \code{(n/(n-1))*(1 - sum(x^2))}
 \item missing: the percent missing data out of the total number of cells.
 }
 
@@ -38,14 +43,38 @@ uniform this distribution is.
 
 Note that this version of Evenness is different than Shannon's Evenness,
 which is \code{H/ln(S)} where S is the number of variables (in our case).
+
+If a vector of factors is supplied, the columns of the matrix is first
+split by this factor and each statistic calculated on each level.
+}
+\note{
+The calculations within this function are derived from the vegan and
+poppr R packages.
 }
 \examples{
+
+# Calculate statistics for the whole data set -----------------------------
+
 data(monilinia)
 entropy(monilinia)
+
+# Use a grouping factor for variables -------------------------------------
+# Each variable in this data set represents and allele that is one of
+# thirteen loci. If we wanted a table across all loci individually, we can
+# group by locus name.
+
+f <- gsub("[.][0-9]+", "", colnames(monilinia))
+f <- factor(f, levels = unique(f))
+colMeans(emon <- entropy(monilinia, f = f)) # average entropy across loci
+emon
+
+# calculating entropy for minimum sets ------------------------------------
+
 set.seed(1999)
 i <- find_samples(monilinia, n = 150, cut = TRUE)
-entropy(monilinia[i[[1]], ])
-entropy(monilinia[i[[2]], ])
+colMeans(emon1 <- entropy(monilinia[i[[1]], ], f = f))
+colMeans(emon2 <- entropy(monilinia[i[[2]], ], f = f))
+
 }
 \references{
 Claude Elwood Shannon. A mathematical theory of communication. Bell Systems

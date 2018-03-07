@@ -73,11 +73,11 @@ library("dplyr")
 # Generate and filter the possible data sets ------------------------------
 set.seed(2018 - 03 - 07)
 res <- find_samples(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
-  tibble::enframe(name = "index", value = "ids") %>% # create a data frame of of list columns
-  dplyr::mutate(n = lengths(ids)) %>%               # count the number of indices in each row
-  dplyr::rowwise() %>%                              # set the data frame to be computed by row
-  dplyr::mutate(first = ids[1], dat = list(monilinia[ids, ,drop = FALSE])) %>%  # add the original data set to each row
-  dplyr::mutate(nall = sum(colSums(dat, na.rm = TRUE) > 0))
+  tibble::enframe(name = "index", value = "ids") %>%            # create a data frame of of list columns
+  dplyr::mutate(n = lengths(ids)) %>%                           # count the number of indices in each row
+  dplyr::rowwise() %>%                                          # set the data frame to be computed by row
+  dplyr::mutate(dat = list(monilinia[ids, ,drop = FALSE])) %>%  # add the original data set to each row
+  dplyr::mutate(nall = sum(colSums(dat, na.rm = TRUE) > 0))     # count the number of columns
 
 # calculate entropy for each data set -------------------------------------
 # The statistics returns a data frame, but because we've embedded the data,
@@ -87,7 +87,7 @@ entro <- res %>%
   dplyr::select(index, e) %>%               # retain only stats and index
   tidyr::unnest()                           # spread out the columns
 
-# sort by E5, gene diversity, and missingness. ----------------------------
+# sort by E5, and missingness. ----------------------------
 res_sort <- res %>%
   dplyr::inner_join(entro, by = "index") %>%
   dplyr::arrange(-E5, missing)
@@ -110,4 +110,24 @@ res_sort$dat[[1]] %>%
 ```
 
 
+### Calculating entropy by groups
+
+We can group our variables as well.
+
+```{r ebyg}
+f <- gsub("[.][0-9]+", "", colnames(monilinia))
+f <- factor(f, unique(f))
+entromean <- res %>% 
+  dplyr::mutate(e = list(entropy(dat, f = f))) %>% # calculate stats for each row
+  dplyr::select(index, e) %>%               # retain only stats and index
+  tidyr::unnest() %>%                       # spread out the columns
+  dplyr::group_by(index) %>%
+  dplyr::summarize_if(is.numeric, mean)     # calculate mean over all loci
+
+# sort by E5, and missingness. ----------------------------
+resmean_sort <- res %>%
+  dplyr::inner_join(entromean, by = "index") %>%
+  dplyr::arrange(-E5, missing)
+resmean_sort
+```
 
