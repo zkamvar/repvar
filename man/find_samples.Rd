@@ -4,7 +4,7 @@
 \alias{find_samples}
 \title{Iteratively find minimum set of samples by shuffling rows}
 \usage{
-find_samples(tab, n = 10, sort = TRUE, cut = FALSE)
+find_samples(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE)
 }
 \arguments{
 \item{tab}{a numeric matrix with rownames}
@@ -16,6 +16,8 @@ of number of samples.}
 
 \item{cut}{when \code{TRUE}, only the results with the minimum number of samples
 will be returned.}
+
+\item{progress}{when \code{TRUE}, a progress bar will be displayed.}
 }
 \value{
 a list of character vectors

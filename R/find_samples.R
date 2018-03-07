@@ -11,6 +11,7 @@
 #'   of number of samples.
 #' @param cut when `TRUE`, only the results with the minimum number of samples
 #'   will be returned.
+#' @param progress when `TRUE`, a progress bar will be displayed.
 #'
 #' @return a list of character vectors
 #' @export
@@ -24,19 +25,24 @@
 #' # This is a random process and will not always return the same values
 #' set.seed(201)
 #' find_samples(monilinia, n = 100, cut = TRUE)
-find_samples <- function(tab, n = 10, sort = TRUE, cut = FALSE) {
+find_samples <- function(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE) {
   res <- vector(mode = "list", length = n)
+  if (progress) prog <- utils::txtProgressBar(min = 0, max = n + sum(sort, cut), style = 3)
   for (i in seq(n)) {
     res[[i]] <- get_minimum_set(tab[sample(nrow(tab)), , drop = FALSE])
+    if (progress) utils::setTxtProgressBar(prog, i)
   }
   lens <- lengths(res)
   if (sort) {
     lsort <- sort.int(lens, index.return = TRUE)
     res  <- res[lsort$ix]
     lens <- lsort$x
+    if (progress) utils::setTxtProgressBar(prog, n + sort)
   }
   if (cut) {
     res <- res[lens == min(lens)]
+    if (progress) utils::setTxtProgressBar(prog, n + sort + cut)
   }
+  close(prog)
   res
 }
