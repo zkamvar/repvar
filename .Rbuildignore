@@ -4,4 +4,4 @@
 ^README\.Rmd$
 ^\.travis\.yml$
 ^codecov\.yml$
-^*_cache$
+^README_cache$
