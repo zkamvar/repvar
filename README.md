@@ -158,7 +158,7 @@ cat(res_sort$ids[[1]], sep = ", ")
 #> A233, A610, A154, A603, A666, A163, A293, A339, A590, A071, A085, A218, A269, A074, A182, A417, A681, A176, A367, A489, A191, A172, A488, A406, A390, A404, A385, A016, A692, A168
 ```
 
-And visualize the distribution
+And visualize the distribution:
 
 ``` r
 res_sort$dat[[1]] %>%

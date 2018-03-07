@@ -100,9 +100,9 @@ From here, we can see the samples
 cat(res_sort$ids[[1]], sep = ", ")
 ```
 
-And visualize the distribution
+And visualize the distribution:
 
-```{r barplot, fig.width = 10}
+```{r barplot, fig.width = 15, fig.height = 7}
 res_sort$dat[[1]] %>%
   colSums(na.rm = TRUE) %>%
   sort() %>%
