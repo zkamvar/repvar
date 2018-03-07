@@ -7,8 +7,8 @@
 #'
 #' @param tab a numeric matrix
 #'
-#' @return a data frame with three columns: `eH`, `G`, and `E5`
-#' @details This function caluclates three statistics from your data using
+#' @return a data frame with three columns: `eH`, `G`, `E5`, and `missing`
+#' @details This function caluclates four statistics from your data using
 #'   variable counts.
 #'
 #' * eH: The exponentiation of shannon's entropy: `exp(sum(-x * log(x)))`
@@ -17,6 +17,7 @@
 #'  index: `1/sum(x * x)` (Stoddart and Taylor, 1988; Simpson, 1949)
 #' * E5: Evenness (5) the ratio between the above two estimates:
 #'  `(G - 1)/(eH - 1)` (Pielou, 1975)
+#' * missing: the percent missing data out of the total number of cells.
 #'
 #'  Both G and eH can be thought of as the number of equally abundant variables
 #'  to acheive the same observed diversity. Both G and eH give different weight
@@ -53,5 +54,6 @@ entropy <- function(tab) {
   H       <- exp(sum(-x * log(x)))
   G       <- 1/(sum(x * x))
   E5      <- (G - 1)/(H - 1)
-  data.frame(eH = H, G = G, E5 = E5)
+  missing <- sum(is.na(tab))/length(tab)
+  data.frame(eH = H, G = G, E5 = E5, missing = missing)
 }

@@ -10,7 +10,7 @@ entropy(tab)
 \item{tab}{a numeric matrix}
 }
 \value{
-a data frame with three columns: \code{eH}, \code{G}, and \code{E5}
+a data frame with three columns: \code{eH}, \code{G}, \code{E5}, and \code{missing}
 }
 \description{
 Because it's possible to have multiple results with a minimum number of
@@ -19,7 +19,7 @@ distributed the alleles are among the samples. This can be done with entropy
 statistics
 }
 \details{
-This function caluclates three statistics from your data using
+This function caluclates four statistics from your data using
 variable counts.
 \itemize{
 \item eH: The exponentiation of shannon's entropy: \code{exp(sum(-x * log(x)))}
@@ -28,6 +28,7 @@ variable counts.
 index: \code{1/sum(x * x)} (Stoddart and Taylor, 1988; Simpson, 1949)
 \item E5: Evenness (5) the ratio between the above two estimates:
 \code{(G - 1)/(eH - 1)} (Pielou, 1975)
+\item missing: the percent missing data out of the total number of cells.
 }
 
 Both G and eH can be thought of as the number of equally abundant variables
