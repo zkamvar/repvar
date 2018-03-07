@@ -43,6 +43,6 @@ find_samples <- function(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE)
     res <- res[lens == min(lens)]
     if (progress) utils::setTxtProgressBar(prog, n + sort + cut)
   }
-  close(prog)
+  if (progress) close(prog)
   res
 }
