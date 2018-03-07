@@ -23,7 +23,7 @@ test_that("the minimum number of rows will be returned", {
 
 test_that("shuffled data will give the same result in this case", {
   set.seed(the_seed)
-  the_rows <- find_samples(mat2, n = 2, sort = FALSE)[[2]]
+  the_rows <- find_samples(mat2, n = 2, sort = FALSE, progress = FALSE)[[2]]
   expect_length(the_rows, 10)
   for (i in 1:10) {
     expect_match(the_rows[i], letters[i], label = letters[i])
