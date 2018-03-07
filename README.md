@@ -44,7 +44,7 @@ print.table(monilinia[1:10, 1:10], zero.print = ".")
 
 # Shuffle the data set 200 times to find an optimal number of samples
 set.seed(2018)
-id_list <- find_samples(monilinia, n = 200, cut = TRUE)
+id_list <- find_samples(monilinia, n = 200, cut = TRUE, progress = FALSE)
 id_list
 #> [[1]]
 #>  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"
@@ -93,10 +93,14 @@ print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
 #> A129          .          1          .         1         .          .          .          .          .           1
 ```
 
-Because you get a list of ids, it's good to see which ones are actually useful. For this, you can calculate entropy. We will use the tidyverse to first create a table of samples and data, calculate entropy for each row, and then join them together. In general, we will want higher entropy values.
+Real-world example
+------------------
+
+Because you get a list of ids, it's good to see which ones are actually useful. For this, you can calculate entropy. We will use the tidyverse to first create a table of samples and data, calculate entropy for each row, and then join them together. In general, we will want higher entropy values. For this, we will load three tidyverse packages:
 
 ``` r
 library("tibble")
+library("tidyr")
 library("dplyr")
 #> 
 #> Attaching package: 'dplyr'
@@ -106,30 +110,61 @@ library("dplyr")
 #> The following objects are masked from 'package:base':
 #> 
 #>     intersect, setdiff, setequal, union
-library("tidyr")
-id_df <- tibble::enframe(id_list, name = "ID", value = "samples") %>%
-  dplyr::rowwise() %>%
-  dplyr::mutate(data = list(monilinia[samples, ]))
-id_df
-#> Source: local data frame [3 x 3]
-#> Groups: <by row>
-#> 
-#> # A tibble: 3 x 3
-#>      ID samples    data           
-#>   <int> <list>     <list>         
-#> 1     1 <chr [30]> <int [30 × 95]>
-#> 2     2 <chr [30]> <int [30 × 95]>
-#> 3     3 <chr [30]> <int [30 × 95]>
-
-# Calculate entropy for each entry
-dplyr::mutate(id_df, diversity = list(entropy(monilinia[samples, ]))) %>%
-  dplyr::select(ID, diversity) %>%
-  tidyr::unnest() %>%
-  dplyr::inner_join(id_df, by = "ID")
-#> # A tibble: 3 x 6
-#>      ID    eH     G    E5 samples    data           
-#>   <int> <dbl> <dbl> <dbl> <list>     <list>         
-#> 1     1  55.2  39.7 0.714 <chr [30]> <int [30 × 95]>
-#> 2     2  55.3  39.8 0.714 <chr [30]> <int [30 × 95]>
-#> 3     3  54.7  39.1 0.708 <chr [30]> <int [30 × 95]>
 ```
+
+``` r
+# Generate and filter the possible data sets ------------------------------
+set.seed(2018 - 03 - 07)
+res <- find_samples(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
+  tibble::enframe(name = "index", value = "ids") %>% # create a data frame of of list columns
+  dplyr::mutate(n = lengths(ids)) %>%               # count the number of indices in each row
+  dplyr::rowwise() %>%                              # set the data frame to be computed by row
+  dplyr::mutate(first = ids[1], dat = list(monilinia[ids, ,drop = FALSE])) %>%  # add the original data set to each row
+  dplyr::mutate(nall = sum(colSums(dat, na.rm = TRUE) > 0))
+
+# calculate entropy for each data set -------------------------------------
+# The statistics returns a data frame, but because we've embedded the data,
+# we must calculate this separately and then merge it later.
+entro <- res %>% 
+  dplyr::mutate(e = list(entropy(dat))) %>% # calculate stats for each row
+  dplyr::select(index, e) %>%               # retain only stats and index
+  tidyr::unnest()                           # spread out the columns
+
+# sort by E5, gene diversity, and missingness. ----------------------------
+res_sort <- res %>%
+  dplyr::inner_join(entro, by = "index") %>%
+  dplyr::arrange(-E5, missing)
+res_sort
+#> # A tibble: 50 x 10
+#>    index ids            n first dat              nall    eH     G    E5 missing
+#>    <int> <list>     <int> <chr> <list>          <int> <dbl> <dbl> <dbl>   <dbl>
+#>  1    46 <chr [30]>    30 A233  <int [30 × 95]>    95  55.9  40.6 0.721 0.00877
+#>  2    12 <chr [30]>    30 A233  <int [30 × 95]>    95  55.7  40.4 0.721 0.00877
+#>  3    28 <chr [30]>    30 A233  <int [30 × 95]>    95  55.8  40.4 0.719 0.00877
+#>  4    26 <chr [30]>    30 A233  <int [30 × 95]>    95  55.5  40.2 0.719 0.00772
+#>  5    17 <chr [30]>    30 A233  <int [30 × 95]>    95  55.4  40.1 0.718 0.00772
+#>  6    24 <chr [30]>    30 A233  <int [30 × 95]>    95  55.4  40.1 0.718 0.00772
+#>  7    41 <chr [30]>    30 A233  <int [30 × 95]>    95  55.1  39.8 0.718 0.00772
+#>  8    23 <chr [30]>    30 A233  <int [30 × 95]>    95  55.1  39.8 0.717 0.00772
+#>  9    48 <chr [30]>    30 A233  <int [30 × 95]>    95  55.5  40.1 0.717 0.00596
+#> 10    27 <chr [30]>    30 A233  <int [30 × 95]>    95  55.3  39.9 0.717 0.00772
+#> # ... with 40 more rows
+```
+
+From here, we can see the samples
+
+``` r
+cat(res_sort$ids[[1]], sep = ", ")
+#> A233, A610, A154, A603, A666, A163, A293, A339, A590, A071, A085, A218, A269, A074, A182, A417, A681, A176, A367, A489, A191, A172, A488, A406, A390, A404, A385, A016, A692, A168
+```
+
+And visualize the distribution
+
+``` r
+res_sort$dat[[1]] %>%
+  colSums(na.rm = TRUE) %>%
+  sort() %>%
+  barplot(las = 3)
+```
+
+<img src="man/figures/README-barplot-1.png" width="100%" />

@@ -48,30 +48,66 @@ print.table(monilinia[1:10, 1:10], zero.print = ".")
 
 # Shuffle the data set 200 times to find an optimal number of samples
 set.seed(2018)
-id_list <- find_samples(monilinia, n = 200, cut = TRUE)
+id_list <- find_samples(monilinia, n = 200, cut = TRUE, progress = FALSE)
 id_list
 lengths(id_list)
 print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
 ```
 
+## Real-world example
+
 Because you get a list of ids, it's good to see which ones are actually useful.
 For this, you can calculate entropy. We will use the tidyverse to first create
 a table of samples and data, calculate entropy for each row, and then join them
-together. In general, we will want higher entropy values. 
+together. In general, we will want higher entropy values. For this, we will
+load three tidyverse packages:
 
-```{r tibble}
+```{r loadtidy}
 library("tibble")
-library("dplyr")
 library("tidyr")
-id_df <- tibble::enframe(id_list, name = "ID", value = "samples") %>%
-  dplyr::rowwise() %>%
-  dplyr::mutate(data = list(monilinia[samples, ]))
-id_df
-
-# Calculate entropy for each entry
-dplyr::mutate(id_df, diversity = list(entropy(monilinia[samples, ]))) %>%
-  dplyr::select(ID, diversity) %>%
-  tidyr::unnest() %>%
-  dplyr::inner_join(id_df, by = "ID")
+library("dplyr")
 ```
+
+
+```{r full_data, cache = TRUE}
+# Generate and filter the possible data sets ------------------------------
+set.seed(2018 - 03 - 07)
+res <- find_samples(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
+  tibble::enframe(name = "index", value = "ids") %>% # create a data frame of of list columns
+  dplyr::mutate(n = lengths(ids)) %>%               # count the number of indices in each row
+  dplyr::rowwise() %>%                              # set the data frame to be computed by row
+  dplyr::mutate(first = ids[1], dat = list(monilinia[ids, ,drop = FALSE])) %>%  # add the original data set to each row
+  dplyr::mutate(nall = sum(colSums(dat, na.rm = TRUE) > 0))
+
+# calculate entropy for each data set -------------------------------------
+# The statistics returns a data frame, but because we've embedded the data,
+# we must calculate this separately and then merge it later.
+entro <- res %>% 
+  dplyr::mutate(e = list(entropy(dat))) %>% # calculate stats for each row
+  dplyr::select(index, e) %>%               # retain only stats and index
+  tidyr::unnest()                           # spread out the columns
+
+# sort by E5, gene diversity, and missingness. ----------------------------
+res_sort <- res %>%
+  dplyr::inner_join(entro, by = "index") %>%
+  dplyr::arrange(-E5, missing)
+res_sort
+```
+
+From here, we can see the samples
+
+```{r viewsamples}
+cat(res_sort$ids[[1]], sep = ", ")
+```
+
+And visualize the distribution
+
+```{r barplot, fig.width = 10}
+res_sort$dat[[1]] %>%
+  colSums(na.rm = TRUE) %>%
+  sort() %>%
+  barplot(las = 3)
+```
+
+
 
