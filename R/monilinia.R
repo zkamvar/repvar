@@ -24,5 +24,5 @@
 #'
 #' @examples
 #' data(monilinia)
-#' (i <- get_minimum_set(monilinia))
+#' (i <- rpv_indices(monilinia))
 "monilinia"
