@@ -20,11 +20,11 @@
 #' data(monilinia)
 #' # Iterate over the data 100 times and return only the minimum values
 #' set.seed(2018)
-#' find_samples(monilinia, n = 100, cut = TRUE)
+#' find_samples(monilinia, n = 100, cut = TRUE, progress = FALSE)
 #'
 #' # This is a random process and will not always return the same values
 #' set.seed(201)
-#' find_samples(monilinia, n = 100, cut = TRUE)
+#' find_samples(monilinia, n = 100, cut = TRUE, progress = FALSE)
 find_samples <- function(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE) {
   res <- vector(mode = "list", length = n)
   if (progress) prog <- utils::txtProgressBar(min = 0, max = n + sum(sort, cut), style = 3)

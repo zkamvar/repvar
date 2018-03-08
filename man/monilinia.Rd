@@ -24,7 +24,7 @@ a set of 13 microsatellite markers comprised of 95 alleles.
 }
 \examples{
 data(monilinia)
-i <- get_minimum_set(monilinia)
+(i <- get_minimum_set(monilinia))
 }
 \references{
 SE Everhart, H Scherm, (2015) Fine-scale genetic structure of

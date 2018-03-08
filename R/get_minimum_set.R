@@ -9,7 +9,7 @@
 #' data(monilinia)
 #' i <- get_minimum_set(monilinia)
 #' i
-#' all(colSums(monilinia[i, ], na.rm = TRUE)) > 0
+#' all(colSums(monilinia[i, ], na.rm = TRUE) > 0)
 get_minimum_set <- function(tab) {
   if (is.null(rownames(tab))){
     stop("This function requires rownames.")

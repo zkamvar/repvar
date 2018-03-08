@@ -24,5 +24,5 @@
 #'
 #' @examples
 #' data(monilinia)
-#' i <- get_minimum_set(monilinia)
+#' (i <- get_minimum_set(monilinia))
 "monilinia"

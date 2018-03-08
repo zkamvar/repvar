@@ -71,7 +71,7 @@
 #' # calculating entropy for minimum sets ------------------------------------
 #'
 #' set.seed(1999)
-#' i <- find_samples(monilinia, n = 150, cut = TRUE)
+#' i <- find_samples(monilinia, n = 150, cut = TRUE, progress = FALSE)
 #' colMeans(emon1 <- entropy(monilinia[i[[1]], ], f = f))
 #' colMeans(emon2 <- entropy(monilinia[i[[2]], ], f = f))
 #'

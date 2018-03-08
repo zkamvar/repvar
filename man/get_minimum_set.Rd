@@ -19,5 +19,5 @@ Get minimum set of individual indices to represent all alleles in a population
 data(monilinia)
 i <- get_minimum_set(monilinia)
 i
-all(colSums(monilinia[i, ], na.rm = TRUE)) > 0
+all(colSums(monilinia[i, ], na.rm = TRUE) > 0)
 }
