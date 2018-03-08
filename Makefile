@@ -2,8 +2,7 @@ README.md : README.Rmd
 	-R -q -e "rmarkdown::render('$<')"
 
 build :
-	cd ../ \
-	R CMD INSTALL --preclean --no-multiarch --with-keep.source --install-tests repvar
+	R CMD INSTALL --preclean --no-multiarch --with-keep.source --install-tests .
 
 test : doc build
 	R -q -e "devtools::test()"
@@ -13,3 +12,6 @@ doc :
 
 check : doc build
 	R -q -e "devtools::check()"
+
+html : build
+	R -q -e "pkgdown::build_site()"
