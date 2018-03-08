@@ -44,7 +44,7 @@ print.table(monilinia[1:10, 1:10], zero.print = ".")
 
 # Shuffle the data set 200 times to find an optimal number of samples
 set.seed(2018)
-id_list <- find_samples(monilinia, n = 200, cut = TRUE, progress = FALSE)
+id_list <- rpv_find(monilinia, n = 200, cut = TRUE, progress = FALSE)
 id_list
 #> [[1]]
 #>  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"
@@ -115,7 +115,7 @@ library("dplyr")
 ``` r
 # Generate and filter the possible data sets ------------------------------
 set.seed(2018 - 03 - 07)
-res <- find_samples(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
+res <- rpv_find(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
   tibble::enframe(name = "index", value = "ids") %>%            # create a data frame of of list columns
   dplyr::mutate(n = lengths(ids)) %>%                           # count the number of indices in each row
   dplyr::rowwise() %>%                                          # set the data frame to be computed by row
@@ -126,7 +126,7 @@ res <- find_samples(monilinia, n = 10000, cut = TRUE, progress = FALSE) %>%
 # The statistics returns a data frame, but because we've embedded the data,
 # we must calculate this separately and then merge it later.
 entro <- res %>% 
-  dplyr::mutate(e = list(entropy(dat))) %>% # calculate stats for each row
+  dplyr::mutate(e = list(rpv_stats(dat))) %>% # calculate stats for each row
   dplyr::select(index, e) %>%               # retain only stats and index
   tidyr::unnest()                           # spread out the columns
 
@@ -169,7 +169,7 @@ res_sort$dat[[1]] %>%
 
 <img src="man/figures/README-barplot-1.png" width="100%" />
 
-### Calculating entropy by groups
+### Calculating rpv\_stats by groups
 
 We can group our variables as well.
 
@@ -177,7 +177,7 @@ We can group our variables as well.
 f <- gsub("[.][0-9]+", "", colnames(monilinia))
 f <- factor(f, unique(f))
 entromean <- res %>% 
-  dplyr::mutate(e = list(entropy(dat, f = f))) %>% # calculate stats for each row
+  dplyr::mutate(e = list(rpv_stats(dat, f = f))) %>% # calculate stats for each row
   dplyr::select(index, e) %>%               # retain only stats and index
   tidyr::unnest() %>%                       # spread out the columns
   dplyr::group_by(index) %>%

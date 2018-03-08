@@ -56,7 +56,7 @@
 #' # Calculate statistics for the whole data set -----------------------------
 #'
 #' data(monilinia)
-#' entropy(monilinia)
+#' rpv_stats(monilinia)
 #'
 #' # Use a grouping factor for variables -------------------------------------
 #' # Each variable in this data set represents and allele that is one of
@@ -65,17 +65,17 @@
 #'
 #' f <- gsub("[.][0-9]+", "", colnames(monilinia))
 #' f <- factor(f, levels = unique(f))
-#' colMeans(emon <- entropy(monilinia, f = f)) # average entropy across loci
+#' colMeans(emon <- rpv_stats(monilinia, f = f)) # average entropy across loci
 #' emon
 #'
 #' # calculating entropy for minimum sets ------------------------------------
 #'
 #' set.seed(1999)
 #' i <- find_samples(monilinia, n = 150, cut = TRUE, progress = FALSE)
-#' colMeans(emon1 <- entropy(monilinia[i[[1]], ], f = f))
-#' colMeans(emon2 <- entropy(monilinia[i[[2]], ], f = f))
+#' colMeans(emon1 <- rpv_stats(monilinia[i[[1]], ], f = f))
+#' colMeans(emon2 <- rpv_stats(monilinia[i[[2]], ], f = f))
 #'
-entropy <- function(tab, f = NULL) {
+rpv_stats <- function(tab, f = NULL) {
   if (!is.null(f)) {
     if (length(f) != ncol(tab)) {
       stop("f must be the same number of columns as tab")
@@ -85,7 +85,7 @@ entropy <- function(tab, f = NULL) {
       f <- factor(f, levels = unique(f))
     }
     groups <- split.matrix(tab, f)
-    res    <- lapply(groups, entropy, f = NULL)
+    res    <- lapply(groups, rpv_stats, f = NULL)
     resdf  <- do.call("rbind", res)
     return(resdf)
   }

@@ -7,10 +7,10 @@
 #' @export
 #' @examples
 #' data(monilinia)
-#' i <- get_minimum_set(monilinia)
+#' i <- rpv_indices(monilinia)
 #' i
 #' all(colSums(monilinia[i, ], na.rm = TRUE) > 0)
-get_minimum_set <- function(tab) {
+rpv_indices <- function(tab) {
   if (is.null(rownames(tab))){
     stop("This function requires rownames.")
   }

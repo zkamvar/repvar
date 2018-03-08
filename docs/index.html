@@ -92,7 +92,7 @@ remotes<span class="op">::</span><span class="kw"><a href="http://www.rdocumenta
 
 <span class="co"># Shuffle the data set 200 times to find an optimal number of samples</span>
 <span class="kw">set.seed</span>(<span class="dv">2018</span>)
-id_list &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_samples.html">find_samples</a></span>(monilinia, <span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">cut =</span> <span class="ot">TRUE</span>, <span class="dt">progress =</span> <span class="ot">FALSE</span>)
+id_list &lt;-<span class="st"> </span><span class="kw"><a href="reference/rpv_find.html">rpv_find</a></span>(monilinia, <span class="dt">n =</span> <span class="dv">200</span>, <span class="dt">cut =</span> <span class="ot">TRUE</span>, <span class="dt">progress =</span> <span class="ot">FALSE</span>)
 id_list
 <span class="co">#&gt; [[1]]</span>
 <span class="co">#&gt;  [1] "A233" "A610" "A154" "A603" "A666" "A163" "A293" "A339" "A590" "A071" "A085" "A218" "A269" "A074" "A182" "A417"</span>
@@ -157,7 +157,7 @@ id_list
 <span class="co">#&gt;     intersect, setdiff, setequal, union</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Generate and filter the possible data sets ------------------------------</span>
 <span class="kw">set.seed</span>(<span class="dv">2018</span> <span class="op">-</span><span class="st"> </span><span class="dv">03</span> <span class="op">-</span><span class="st"> </span><span class="dv">07</span>)
-res &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_samples.html">find_samples</a></span>(monilinia, <span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">cut =</span> <span class="ot">TRUE</span>, <span class="dt">progress =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
+res &lt;-<span class="st"> </span><span class="kw"><a href="reference/rpv_find.html">rpv_find</a></span>(monilinia, <span class="dt">n =</span> <span class="dv">10000</span>, <span class="dt">cut =</span> <span class="ot">TRUE</span>, <span class="dt">progress =</span> <span class="ot">FALSE</span>) <span class="op">%&gt;%</span>
 <span class="st">  </span>tibble<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tibble/topics/enframe">enframe</a></span>(<span class="dt">name =</span> <span class="st">"index"</span>, <span class="dt">value =</span> <span class="st">"ids"</span>) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># create a data frame of of list columns</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">n =</span> <span class="kw">lengths</span>(ids)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># count the number of indices in each row</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/rowwise.html">rowwise</a></span>() <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># set the data frame to be computed by row</span>
@@ -168,7 +168,7 @@ res &lt;-<span class="st"> </span><span class="kw"><a href="reference/find_sampl
 <span class="co"># The statistics returns a data frame, but because we've embedded the data,</span>
 <span class="co"># we must calculate this separately and then merge it later.</span>
 entro &lt;-<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">e =</span> <span class="kw">list</span>(<span class="kw"><a href="reference/entropy.html">entropy</a></span>(dat))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculate stats for each row</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">e =</span> <span class="kw">list</span>(<span class="kw"><a href="reference/rpv_stats.html">rpv_stats</a></span>(dat))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculate stats for each row</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(index, e) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># retain only stats and index</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>()                           <span class="co"># spread out the columns</span>
 
@@ -200,14 +200,14 @@ res_sort
 <span class="st">  </span><span class="kw">sort</span>() <span class="op">%&gt;%</span>
 <span class="st">  </span><span class="kw">barplot</span>(<span class="dt">las =</span> <span class="dv">3</span>)</code></pre></div>
 <p><img src="reference/figures/README-barplot-1.png" width="100%"></p>
-<div id="calculating-entropy-by-groups" class="section level3">
+<div id="calculating-rpv_stats-by-groups" class="section level3">
 <h3 class="hasAnchor">
-<a href="#calculating-entropy-by-groups" class="anchor"></a>Calculating entropy by groups</h3>
+<a href="#calculating-rpv_stats-by-groups" class="anchor"></a>Calculating rpv_stats by groups</h3>
 <p>We can group our variables as well.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">gsub</span>(<span class="st">"[.][0-9]+"</span>, <span class="st">""</span>, <span class="kw">colnames</span>(monilinia))
 f &lt;-<span class="st"> </span><span class="kw">factor</span>(f, <span class="kw">unique</span>(f))
 entromean &lt;-<span class="st"> </span>res <span class="op">%&gt;%</span><span class="st"> </span>
-<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">e =</span> <span class="kw">list</span>(<span class="kw"><a href="reference/entropy.html">entropy</a></span>(dat, <span class="dt">f =</span> f))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculate stats for each row</span>
+<span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">e =</span> <span class="kw">list</span>(<span class="kw"><a href="reference/rpv_stats.html">rpv_stats</a></span>(dat, <span class="dt">f =</span> f))) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># calculate stats for each row</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(index, e) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># retain only stats and index</span>
 <span class="st">  </span>tidyr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/tidyr/topics/unnest">unnest</a></span>() <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># spread out the columns</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(index) <span class="op">%&gt;%</span>

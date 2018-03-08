@@ -1,6 +1,6 @@
 #' Iteratively find minimum set of samples by shuffling rows
 #'
-#' Because [get_minimum_set()] is deterministic, it may not present the
+#' Because [rpv_indices()] is deterministic, it may not present the
 #' minimum set that represents all variables. This procedure automates the
 #' process of randomly sampling the rows in the incoming matrix without
 #' replacement to find a minimum set.
@@ -20,16 +20,16 @@
 #' data(monilinia)
 #' # Iterate over the data 100 times and return only the minimum values
 #' set.seed(2018)
-#' find_samples(monilinia, n = 100, cut = TRUE, progress = FALSE)
+#' rpv_find(monilinia, n = 100, cut = TRUE, progress = FALSE)
 #'
 #' # This is a random process and will not always return the same values
 #' set.seed(201)
-#' find_samples(monilinia, n = 100, cut = TRUE, progress = FALSE)
-find_samples <- function(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE) {
+#' rpv_find(monilinia, n = 100, cut = TRUE, progress = FALSE)
+rpv_find <- function(tab, n = 10, sort = TRUE, cut = FALSE, progress = TRUE) {
   res <- vector(mode = "list", length = n)
   if (progress) prog <- utils::txtProgressBar(min = 0, max = n + sum(sort, cut), style = 3)
   for (i in seq(n)) {
-    res[[i]] <- get_minimum_set(tab[sample(nrow(tab)), , drop = FALSE])
+    res[[i]] <- rpv_indices(tab[sample(nrow(tab)), , drop = FALSE])
     if (progress) utils::setTxtProgressBar(prog, i)
   }
   lens <- lengths(res)

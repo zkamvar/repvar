@@ -10,11 +10,11 @@ This package allows you to find the minimum set of samples that represents
 all non-zero variables in a binary matrix.
 }
 \details{
-Minimum set of samples can be found with the function \code{\link[=find_samples]{find_samples()}}. This
-function will shuffle your data set and pass it to \code{\link[=get_minimum_set]{get_minimum_set()}}. From
+Minimum set of samples can be found with the function \code{\link[=rpv_find]{rpv_find()}}. This
+function will shuffle your data set and pass it to \code{\link[=rpv_indices]{rpv_indices()}}. From
 this, you will have a list of sample names.
 
 Because there may be several combinations of samples that represent all
-variables, the function \code{\link[=entropy]{entropy()}} can be used to calculate entropy
+variables, the function \code{\link[=rpv_stats]{rpv_stats()}} can be used to calculate entropy
 statistics over these variables.
 }
