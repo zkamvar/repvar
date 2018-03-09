@@ -100,13 +100,14 @@ From here, we can see the samples
 cat(res_sort$ids[[1]], sep = ", ")
 ```
 
-And visualize the distribution:
+We can use this to then visualize the distributon of the sub-sampled data:
 
 ```{r barplot, fig.width = 15, fig.height = 7}
-res_sort$dat[[1]] %>%
-  colSums(na.rm = TRUE) %>%
-  sort() %>%
-  barplot(las = 3)
+mc <- colSums(monilinia, na.rm = TRUE)
+barplot(sort(mc), las = 3)
+rc <- colSums(res_sort$dat[[1]], na.rm = TRUE)
+barplot(rc[order(mc)], xaxt = "n", add = TRUE, col = "blue")
+legend("topleft", fill = c("grey", "blue"), legend = c("full data", "subsampled"))
 ```
 
 
@@ -134,8 +135,6 @@ resmean_sort
 The factor can be used to color our barplot
 
 ```{r barplot2, fig.width = 15, fig.height = 7}
-rd1 <- res_sort$dat[[1]] %>% colSums(na.rm = TRUE) 
-
-sort(rd1) %>%
-  barplot(las = 3, col = f[order(rd1)])
+rd1 <- colSums(resmean_sort$dat[[1]], na.rm = TRUE) 
+barplot(rd1[order(mc)], las = 3, col = f[order(mc)])
 ```

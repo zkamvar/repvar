@@ -158,13 +158,14 @@ cat(res_sort$ids[[1]], sep = ", ")
 #> A233, A610, A154, A603, A666, A163, A293, A339, A590, A071, A085, A218, A269, A074, A182, A417, A681, A176, A367, A489, A191, A172, A488, A406, A390, A404, A385, A016, A692, A168
 ```
 
-And visualize the distribution:
+We can use this to then visualize the distributon of the sub-sampled data:
 
 ``` r
-res_sort$dat[[1]] %>%
-  colSums(na.rm = TRUE) %>%
-  sort() %>%
-  barplot(las = 3)
+mc <- colSums(monilinia, na.rm = TRUE)
+barplot(sort(mc), las = 3)
+rc <- colSums(res_sort$dat[[1]], na.rm = TRUE)
+barplot(rc[order(mc)], xaxt = "n", add = TRUE, col = "blue")
+legend("topleft", fill = c("grey", "blue"), legend = c("full data", "subsampled"))
 ```
 
 <img src="man/figures/README-barplot-1.png" width="100%" />
@@ -207,10 +208,8 @@ resmean_sort
 The factor can be used to color our barplot
 
 ``` r
-rd1 <- res_sort$dat[[1]] %>% colSums(na.rm = TRUE) 
-
-sort(rd1) %>%
-  barplot(las = 3, col = f[order(rd1)])
+rd1 <- colSums(resmean_sort$dat[[1]], na.rm = TRUE) 
+barplot(rd1[order(mc)], las = 3, col = f[order(mc)])
 ```
 
 <img src="man/figures/README-barplot2-1.png" width="100%" />

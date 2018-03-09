@@ -194,11 +194,12 @@ res_sort
 <p>From here, we can see the samples</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cat</span>(res_sort<span class="op">$</span>ids[[<span class="dv">1</span>]], <span class="dt">sep =</span> <span class="st">", "</span>)
 <span class="co">#&gt; A233, A610, A154, A603, A666, A163, A293, A339, A590, A071, A085, A218, A269, A074, A182, A417, A681, A176, A367, A489, A191, A172, A488, A406, A390, A404, A385, A016, A692, A168</span></code></pre></div>
-<p>And visualize the distribution:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">res_sort<span class="op">$</span>dat[[<span class="dv">1</span>]] <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">colSums</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">sort</span>() <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">barplot</span>(<span class="dt">las =</span> <span class="dv">3</span>)</code></pre></div>
+<p>We can use this to then visualize the distributon of the sub-sampled data:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mc &lt;-<span class="st"> </span><span class="kw">colSums</span>(monilinia, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+<span class="kw">barplot</span>(<span class="kw">sort</span>(mc), <span class="dt">las =</span> <span class="dv">3</span>)
+rc &lt;-<span class="st"> </span><span class="kw">colSums</span>(res_sort<span class="op">$</span>dat[[<span class="dv">1</span>]], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)
+<span class="kw">barplot</span>(rc[<span class="kw">order</span>(mc)], <span class="dt">xaxt =</span> <span class="st">"n"</span>, <span class="dt">add =</span> <span class="ot">TRUE</span>, <span class="dt">col =</span> <span class="st">"blue"</span>)
+<span class="kw">legend</span>(<span class="st">"topleft"</span>, <span class="dt">fill =</span> <span class="kw">c</span>(<span class="st">"grey"</span>, <span class="st">"blue"</span>), <span class="dt">legend =</span> <span class="kw">c</span>(<span class="st">"full data"</span>, <span class="st">"subsampled"</span>))</code></pre></div>
 <p><img src="reference/figures/README-barplot-1.png" width="100%"></p>
 <div id="calculating-rpv_stats-by-groups" class="section level3">
 <h3 class="hasAnchor">
@@ -233,10 +234,8 @@ resmean_sort
 <span class="co">#&gt; 10    22 &lt;chr [30]&gt;    30 &lt;int [30 × 95]&gt;    95  4.61  3.57 0.712  0.694 0.00769</span>
 <span class="co">#&gt; # ... with 40 more rows</span></code></pre></div>
 <p>The factor can be used to color our barplot</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rd1 &lt;-<span class="st"> </span>res_sort<span class="op">$</span>dat[[<span class="dv">1</span>]] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">colSums</span>(<span class="dt">na.rm =</span> <span class="ot">TRUE</span>) 
-
-<span class="kw">sort</span>(rd1) <span class="op">%&gt;%</span>
-<span class="st">  </span><span class="kw">barplot</span>(<span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">col =</span> f[<span class="kw">order</span>(rd1)])</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rd1 &lt;-<span class="st"> </span><span class="kw">colSums</span>(resmean_sort<span class="op">$</span>dat[[<span class="dv">1</span>]], <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) 
+<span class="kw">barplot</span>(rd1[<span class="kw">order</span>(mc)], <span class="dt">las =</span> <span class="dv">3</span>, <span class="dt">col =</span> f[<span class="kw">order</span>(mc)])</code></pre></div>
 <p><img src="reference/figures/README-barplot2-1.png" width="100%"></p>
 </div>
 </div>
