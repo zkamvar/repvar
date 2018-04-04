@@ -1,0 +1,111 @@
+---
+title: "Getting Started"
+author: "Zhian N. Kamvar and Sydney E. Everhart"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+What the repvar package does
+============================
+
+The repvar package is designed to provide a simple way of finding the minimum 
+number of samples needed to **rep**resent all **var**iables in a given sparse
+binary matrix. The impetus for this was driven by a need to resequence a small
+set of samples from a population genetic study to serve as positive controls for
+allele calls. 
+
+
+How it works
+------------
+
+The main algorithm is in the function `rpv_indices()`. In it's simplest form,
+the algorithm works like so:
+
+1. count the number of observations in each column and sort them
+2. set a counter to count the number of columns that haven't been accounted for
+3. create a vector to store the sample names
+4. while the counter is greater than zero
+  A. record the first sample from each of the columns with the smallest number of observations
+  B. take the union of those sample names and any other sample names that have been collected
+  C. remove the columns these samples represent from the original column list
+  D. set the counter to the number of columns left in the original column list
+5. verify that all the columns have been accounted for by the sample names
+6. return the vector of sample names
+
+You can verify for yourself that it works. We will be using a data set 
+representing 264 samples of *Monilinia fructicola* collected from peach orchards
+in Georgia genotyped at 13 microsatellite loci representing 95 alleles. The data
+are stored in a 264x95 matrix where each row represents a sample and each column
+represents an allele. Black cells indicate the presence of an allele, blue cells
+indicate an absence and white cells indicate missing data. 
+
+
+```{r show_monilinia, echo = FALSE}
+# Load the package and example data
+library("repvar")
+data("monilinia")
+
+# Function to get midpoints of a vector
+midpoints <- function(x, n) as.integer(x[-length(x)] + (x[-1] - x[-length(x)])/2)
+the_loci <- c(
+  'CHMFc4'  = 1,
+  'CHMFc5'  = 4,
+  'CHMFc12' = 10,
+  'SEA'     = 13,
+  'SED'     = 24,
+  'SEE'     = 33,
+  'SEG'     = 38,
+  'SEI'     = 46,
+  'SEL'     = 53,
+  'SEN'     = 58,
+  'SEP'     = 67,
+  'SEQ'     = 75,
+  'SER'     = 86
+  )
+
+image_monilinia <- function(mat, loci, col = c("powderblue", "grey10")){
+  ncol  <- ncol(mat)
+  ticks <- midpoints(c(loci, ncol))/ncol
+  image(t(mat), axes = FALSE, col = col)
+  abline(v = c((loci - 1.5)/(ncol - 1), 1 + (0.5/(ncol - 1))), lwd = 2, col = "grey97")
+  axis(1, at = ticks, labels = names(loci), las = 3, tick = FALSE, padj = 0)
+}
+
+# View the data set
+image_monilinia(monilinia, the_loci)
+```
+
+Immediately you should be able to see that some loci---like CHMFc4---have few
+alleles that are fairly well-represented while other loci---like SEA---have
+several alleles with the majority of them represented by a handful of samples.
+
+If we run `rpv_indices()` on our data, we get a vector of samples that represent
+all of the alleles:
+
+```{r ex1}
+library("repvar")
+data("monilinia")
+print(ids <- rpv_indices(monilinia))
+length(ids)
+colSums(monilinia[ids, ])
+```
+
+If we visualize just these samples, we can see that each locus is accounted for 
+at least once:
+
+```{r ex1_show, echo = FALSE}
+image_monilinia(monilinia[ids, ], the_loci)
+```
+
+

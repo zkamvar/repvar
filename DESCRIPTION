@@ -26,4 +26,7 @@ Suggests:
     tibble,
     tidyr,
     dplyr,
-    purrr
+    purrr,
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
