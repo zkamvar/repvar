@@ -12,7 +12,11 @@ vignette: >
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  fig.width = 10,
+  fig.height = 10,
+  out.width = "500px", 
+  out.height = "500px"
 )
 ```
 
@@ -101,10 +105,20 @@ length(ids)
 colSums(monilinia[ids, ])
 ```
 
+Let's highlight where these sampeles came from:
+
+```{r global_show, echo = FALSE}
+mon2 <- monilinia
+mon2[!rownames(mon2) %in% ids, ] <- NA
+image_monilinia(monilinia, the_loci)
+image(t(mon2), add = TRUE, axes = FALSE, col = c("yellow", "firebrick"))
+```
+
+
 If we visualize just these samples, we can see that each locus is accounted for 
 at least once:
 
-```{r ex1_show, echo = FALSE}
+```{r ex1_show, echo = FALSE, out.height = "250px", fig.height = 5}
 image_monilinia(monilinia[ids, ], the_loci)
 ```
 
