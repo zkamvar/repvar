@@ -11,7 +11,7 @@
 #' i
 #' all(colSums(monilinia[i, ], na.rm = TRUE) > 0)
 rpv_indices <- function(tab) {
-  if (is.null(rownames(tab))){
+  if (is.null(rownames(tab))) {
     stop("This function requires rownames.")
   }
   # setup -------------------------------------------------------------------
@@ -25,7 +25,7 @@ rpv_indices <- function(tab) {
   # columns_to_inspect - same length as `counts`: a vector of logical values
   #                      that indicate alleles that have yet to be accumulated
   #                      in our final result.
-  counts     <- colSums(tab, na.rm = TRUE)
+  counts     <- colSums(tab > 0, na.rm = TRUE)
   all_counts <- unique(sort(counts))
   columns_to_inspect <- rep(TRUE, ncol(tab)) & counts > 0
 
