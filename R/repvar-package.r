@@ -11,7 +11,10 @@
 #' variables, the function [rpv_stats()] can be used to calculate entropy
 #' statistics over these variables.
 #'
+#' If you want to visualize your data set, you can use [rpv_image()]
+#'
 #' @name repvar
 #' @docType package
 #' @importFrom stats na.omit
+#' @importFrom graphics image axis abline
 NULL

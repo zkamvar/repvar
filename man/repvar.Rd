@@ -17,4 +17,6 @@ this, you will have a list of sample names.
 Because there may be several combinations of samples that represent all
 variables, the function \code{\link[=rpv_stats]{rpv_stats()}} can be used to calculate entropy
 statistics over these variables.
+
+If you want to visualize your data set, you can use \code{\link[=rpv_image]{rpv_image()}}
 }

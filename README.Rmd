@@ -9,7 +9,9 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "100%",
+  fig.width = 7,
+  fig.height = 7 
 )
 ```
 # repvar
@@ -38,21 +40,27 @@ remotes::install_github("zkamvar/repvar")
 Here is a basic example of how you can identify the minimum set. We will use the
 pre-packaged `monilinia` data set from Everhart and Scherm 2016.
 
-```{r example}
+```{r example, out.height = "700px"}
 options(width = 120)
 
 library("repvar")
-data(monilinia)
+data("monilinia")
 dim(monilinia)
-print.table(monilinia[1:10, 1:10], zero.print = ".")
+loci <- sapply(strsplit(colnames(monilinia), "[.]"), "[", 1)
+rpv_image(monilinia, f = loci) # show the data
+```
 
+
+```{r example2, out.height = "700px"}
 # Shuffle the data set 200 times to find an optimal number of samples
 set.seed(2018)
 id_list <- rpv_find(monilinia, n = 200, cut = TRUE, progress = FALSE)
 id_list
 lengths(id_list)
-print.table(monilinia[id_list[[1]], 1:10], zero.print = ".")
+rpv_image(monilinia, f = loci, highlight = id_list[[1]])
 ```
+
+Here, the yellow bands highlight the IDs that we found.
 
 ## Real-world example
 

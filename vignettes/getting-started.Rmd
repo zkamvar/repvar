@@ -40,54 +40,85 @@ the algorithm works like so:
 2. set a counter to count the number of columns that haven't been accounted for
 3. create a vector to store the sample names
 4. while the counter is greater than zero
-  A. record the first sample from each of the columns with the smallest number of observations
-  B. take the union of those sample names and any other sample names that have been collected
-  C. remove the columns these samples represent from the original column list
-  D. set the counter to the number of columns left in the original column list
+     i. record the first sample from each of the columns with the smallest number of observations
+     ii. take the union of those sample names and any other sample names that have been collected
+     iii. remove the columns these samples represent from the original column list
+     iv. set the counter to the number of columns left in the original column list
 5. verify that all the columns have been accounted for by the sample names
 6. return the vector of sample names
 
-You can verify for yourself that it works. We will be using a data set 
+Functions in this package
+-------------------------
+
+There are four functions in this package:
+
+1. `rpv_indices()` searches a matrix with the above algorithm and returns a
+   vector of rownames for that matrix.
+2. `rpv_find()` randomizes the rows of the matrix and performs `rpv_indices()`
+   on the randomizations to return a list of candidates to be the minimum set.
+3. `rpv_stats()` computes diversity indices for a matrix.
+4. `rpv_image()` allows you to visualize your matrix as an image.
+
+Quickstart
+----------
+
+Because there are several possibilities for minimum number of samples, the data 
+should be randomized and iterated over several times. This can be done with 
+`rpv_find()`:
+
+```{r quickstart}
+library("repvar")
+data("monilinia")
+# First, view our data
+loci <- sapply(strsplit(colnames(monilinia), "[.]"), "[", 1)
+rpv_image(monilinia, f = loci)
+
+# Now randomly sample 200 times to get a set of vectors
+set.seed(2018)
+id_list <- rpv_find(monilinia, n = 200, cut = TRUE, progress = FALSE)
+id_list
+lengths(id_list)
+```
+
+We can see here that we have 3 possible sets of samples that have 30 samples
+each. We can compare them using `rpv_stats()`, which calculate entropy
+statistics:
+
+```{r stats}
+do.call("rbind", lapply(id_list, function(i) rpv_stats(monilinia[i, ])))
+```
+
+
+From this, we can see that they are all relatively equivalent, but the first set
+has the least missing data and the greatest evenness (E5). 
+
+Let's see what samples this represents:
+
+```{r highlight}
+rpv_image(monilinia, f = loci, highlight = id_list[[1]])
+```
+
+```{r highlight2, out.height = "250px", fig.height = 5}
+rpv_image(monilinia[id_list[[1]], ], f = loci)
+```
+
+
+
+Detailed Example: *Monilinia fructicola*
+========================================
+
+To demonstrate why we need to shuffle the data, we will be using a data set
 representing 264 samples of *Monilinia fructicola* collected from peach orchards
 in Georgia genotyped at 13 microsatellite loci representing 95 alleles. The data
 are stored in a 264x95 matrix where each row represents a sample and each column
 represents an allele. Black cells indicate the presence of an allele, blue cells
-indicate an absence and white cells indicate missing data. 
+indicate an absence and white cells indicate missing data.
 
-
-```{r show_monilinia, echo = FALSE}
-# Load the package and example data
+```{r show_monilinia}
 library("repvar")
 data("monilinia")
-
-# Function to get midpoints of a vector
-midpoints <- function(x, n) as.integer(x[-length(x)] + (x[-1] - x[-length(x)])/2)
-the_loci <- c(
-  'CHMFc4'  = 1,
-  'CHMFc5'  = 4,
-  'CHMFc12' = 10,
-  'SEA'     = 13,
-  'SED'     = 24,
-  'SEE'     = 33,
-  'SEG'     = 38,
-  'SEI'     = 46,
-  'SEL'     = 53,
-  'SEN'     = 58,
-  'SEP'     = 67,
-  'SEQ'     = 75,
-  'SER'     = 86
-  )
-
-image_monilinia <- function(mat, loci, col = c("powderblue", "grey10")){
-  ncol  <- ncol(mat)
-  ticks <- midpoints(c(loci, ncol))/ncol
-  image(t(mat), axes = FALSE, col = col)
-  abline(v = c((loci - 1.5)/(ncol - 1), 1 + (0.5/(ncol - 1))), lwd = 2, col = "grey97")
-  axis(1, at = ticks, labels = names(loci), las = 3, tick = FALSE, padj = 0)
-}
-
-# View the data set
-image_monilinia(monilinia, the_loci)
+loci <- sapply(strsplit(colnames(monilinia), "[.]"), "[", 1)
+rpv_image(monilinia, f = loci)
 ```
 
 Immediately you should be able to see that some loci---like CHMFc4---have few
@@ -98,28 +129,45 @@ If we run `rpv_indices()` on our data, we get a vector of samples that represent
 all of the alleles:
 
 ```{r ex1}
-library("repvar")
-data("monilinia")
 print(ids <- rpv_indices(monilinia))
 length(ids)
-colSums(monilinia[ids, ])
+colSums(monilinia[ids, ]) # all of the variables are represented
 ```
 
-Let's highlight where these sampeles came from:
+Let's highlight where these sampels came from:
 
-```{r global_show, echo = FALSE}
-mon2 <- monilinia
-mon2[!rownames(mon2) %in% ids, ] <- NA
-image_monilinia(monilinia, the_loci)
-image(t(mon2), add = TRUE, axes = FALSE, col = c("yellow", "firebrick"))
+```{r global_show}
+rpv_image(monilinia, f = loci, highlight = ids)
 ```
 
 
 If we visualize just these samples, we can see that each locus is accounted for 
 at least once:
 
-```{r ex1_show, echo = FALSE, out.height = "250px", fig.height = 5}
-image_monilinia(monilinia[ids, ], the_loci)
+```{r ex1_show2, out.height = "250px", fig.height = 5}
+rpv_image(monilinia[ids, ], f = loci)
 ```
 
+
+However, if we shuffle the data set:
+
+```{r ex1_shuffle}
+set.seed(2018)
+monilinia_shuffled <- monilinia[sample(nrow(monilinia)), ]
+rpv_image(monilinia, f = loci) # shuffled data
+```
+
+We get a different answer:
+
+```{r ex1_show, fig.width = 20, out.width = "1000px"}
+print(new_ids <- rpv_indices(monilinia_shuffled))
+par(mfrow = c(1, 2))
+rpv_image(monilinia, f = loci, highlight = new_ids, 
+          col = c("grey95", "grey10"),
+          idcol = c("firebrick", "yellow"))
+rpv_image(monilinia, f = loci, highlight = ids, 
+          col = c("grey95", "grey10"),
+          idcol = c("firebrick", "yellow"))
+par(mfrow = c(1, 1))
+```
 

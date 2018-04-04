@@ -3,7 +3,8 @@ Type: Package
 Title: Extract Samples to Represent All Variables
 Version: 0.1.0
 Depends: R (>= 3.1.0)
-Imports: stats
+BugReports: https://github.com/zkamvar/repvar/issues
+Imports: stats, graphics
 Authors@R: c(person(c("Zhian", "N."), "Kamvar", role = c("cre", "aut"),
     email = "zkamvar@gmail.com", comment = c(ORCID = "0000-0003-1458-7108")),
     person(c("Sydney", "E."), "Everhart", role = c("ctb", "dtc"),
