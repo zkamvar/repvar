@@ -5,7 +5,7 @@
 \title{Create an image of the data matrix}
 \usage{
 rpv_image(tab, f = NULL, highlight = NULL, newplot = TRUE,
-  col = c("powderblue", "grey10"), idcol = c("yellow", "firebrick"))
+  col = c("#A6CEE3", "#1F78B4"), idcol = c("#FFFF99", "#B15928"))
 }
 \arguments{
 \item{tab}{a numeric matrix}

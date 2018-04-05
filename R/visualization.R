@@ -21,8 +21,8 @@
 #' rpv_image(monilinia, f = loci)
 #' rpv_image(monilinia, f = loci, highlight = rpv_indices(monilinia))
 rpv_image <- function(tab, f = NULL, highlight = NULL, newplot = TRUE,
-                      col = c("powderblue", "grey10"),
-                      idcol = c("yellow", "firebrick")){
+                      col = c("#A6CEE3", "#1F78B4"),
+                      idcol = c("#FFFF99", "#B15928")){
   tab   <- tab > 0
   ncol  <- ncol(tab)
   i     <- rev(seq_len(nrow(tab)))

@@ -165,12 +165,12 @@ par(mfrow = c(1, 2))
 rpv_image(monilinia, f = loci, highlight = new_ids, 
           newplot = FALSE,                 # avoid creating a new plot
           col = c("grey95", "grey10"),     # color background grey
-          idcol = c("firebrick", "yellow") # color highlight red and yellow
+          idcol = c("#B15928", "#FFFF99")  # reverse foreground colors
           )
 rpv_image(monilinia, f = loci, highlight = ids, 
           newplot = FALSE,                 # avoid creating a new plot
           col = c("grey95", "grey10"),     # color background grey
-          idcol = c("firebrick", "yellow") # color highlight red and yellow
+          idcol = c("#B15928", "#FFFF99")  # reverse foreground colors
           )
 par(mfrow = c(1, 1))
 ```
