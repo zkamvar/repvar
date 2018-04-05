@@ -4,8 +4,8 @@
 \alias{rpv_image}
 \title{Create an image of the data matrix}
 \usage{
-rpv_image(tab, f = NULL, highlight = NULL, col = c("powderblue",
-  "grey10"), idcol = c("yellow", "firebrick"))
+rpv_image(tab, f = NULL, highlight = NULL, newplot = TRUE,
+  col = c("powderblue", "grey10"), idcol = c("yellow", "firebrick"))
 }
 \arguments{
 \item{tab}{a numeric matrix}
@@ -15,6 +15,9 @@ this is used to split the matrix up by groups for analysis.}
 
 \item{highlight}{a character vector specifing which row names or indices to
 highlight.}
+
+\item{newplot}{When \code{TRUE} (default), The image will not over-write the
+previous image. Turn this off if you want to use multi-panel plotting.}
 
 \item{col}{a two-color vector for the values of the matrix.}
 

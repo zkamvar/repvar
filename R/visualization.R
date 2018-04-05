@@ -3,6 +3,8 @@
 #' @inheritParams rpv_stats
 #' @param highlight a character vector specifing which row names or indices to
 #'   highlight.
+#' @param newplot When `TRUE` (default), The image will not over-write the
+#'   previous image. Turn this off if you want to use multi-panel plotting.
 #' @param col a two-color vector for the values of the matrix.
 #' @param idcol a two-color vector for the highlight values.
 #'
@@ -18,10 +20,14 @@
 #' loci <- sapply(strsplit(colnames(monilinia), "[.]"), "[", 1)
 #' rpv_image(monilinia, f = loci)
 #' rpv_image(monilinia, f = loci, highlight = rpv_indices(monilinia))
-rpv_image <- function(tab, f = NULL, highlight = NULL, col = c("powderblue", "grey10"), idcol = c("yellow", "firebrick")){
+rpv_image <- function(tab, f = NULL, highlight = NULL, newplot = TRUE,
+                      col = c("powderblue", "grey10"),
+                      idcol = c("yellow", "firebrick")){
   tab   <- tab > 0
   ncol  <- ncol(tab)
-  graphics::image(t(tab), axes = FALSE, col = col)
+  i     <- rev(seq_len(nrow(tab)))
+  if (newplot) plot.new()
+  graphics::image(t(tab[i, , drop = FALSE]), axes = FALSE, col = col)
   if (!is.null(f)) {
     if (is.character(f)) {
       f <- factor(f, levels = unique(f))
@@ -35,7 +41,7 @@ rpv_image <- function(tab, f = NULL, highlight = NULL, col = c("powderblue", "gr
     if (is.character(highlight)) {
       tab2 <- tab
       tab2[!rownames(tab) %in% highlight, ] <- NA
-      image(t(tab2), add = TRUE, axes = FALSE, col = idcol)
+      graphics::image(t(tab2[i, , drop = FALSE]), add = TRUE, axes = FALSE, col = idcol)
     }
   }
   invisible(NULL)

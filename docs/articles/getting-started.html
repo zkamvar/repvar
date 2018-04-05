@@ -56,6 +56,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right"></ul>
 </div>
@@ -72,7 +75,7 @@
       <h1>Getting Started</h1>
                         <h4 class="author">Zhian N. Kamvar and Sydney E. Everhart</h4>
             
-            <h4 class="date">2018-04-04</h4>
+            <h4 class="date">2018-04-05</h4>
       
       
       <p class="hidden name"><code>getting-started.Rmd</code></p>
@@ -226,7 +229,7 @@ loci &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="k
 <p>However, if we shuffle the data set:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2018</span>)
 monilinia_shuffled &lt;-<span class="st"> </span>monilinia[<span class="kw">sample</span>(<span class="kw">nrow</span>(monilinia)), ]
-<span class="kw"><a href="../reference/rpv_image.html">rpv_image</a></span>(monilinia, <span class="dt">f =</span> loci) <span class="co"># shuffled data</span></code></pre></div>
+<span class="kw"><a href="../reference/rpv_image.html">rpv_image</a></span>(monilinia_shuffled, <span class="dt">f =</span> loci) <span class="co"># shuffled data</span></code></pre></div>
 <p><img src="getting-started_files/figure-html/ex1_shuffle-1.png" width="500px" height="500px"></p>
 <p>We get a different answer:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(new_ids &lt;-<span class="st"> </span><span class="kw"><a href="../reference/rpv_indices.html">rpv_indices</a></span>(monilinia_shuffled))
@@ -236,11 +239,15 @@ monilinia_shuffled &lt;-<span class="st"> </span>monilinia[<span class="kw">samp
 <span class="co">#&gt; [31] "A500" "A007"</span>
 <span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>))
 <span class="kw"><a href="../reference/rpv_image.html">rpv_image</a></span>(monilinia, <span class="dt">f =</span> loci, <span class="dt">highlight =</span> new_ids, 
-          <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">"grey95"</span>, <span class="st">"grey10"</span>),
-          <span class="dt">idcol =</span> <span class="kw">c</span>(<span class="st">"firebrick"</span>, <span class="st">"yellow"</span>))
+          <span class="dt">newplot =</span> <span class="ot">FALSE</span>,                 <span class="co"># avoid creating a new plot</span>
+          <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">"grey95"</span>, <span class="st">"grey10"</span>),     <span class="co"># color background grey</span>
+          <span class="dt">idcol =</span> <span class="kw">c</span>(<span class="st">"firebrick"</span>, <span class="st">"yellow"</span>) <span class="co"># color highlight red and yellow</span>
+          )
 <span class="kw"><a href="../reference/rpv_image.html">rpv_image</a></span>(monilinia, <span class="dt">f =</span> loci, <span class="dt">highlight =</span> ids, 
-          <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">"grey95"</span>, <span class="st">"grey10"</span>),
-          <span class="dt">idcol =</span> <span class="kw">c</span>(<span class="st">"firebrick"</span>, <span class="st">"yellow"</span>))</code></pre></div>
+          <span class="dt">newplot =</span> <span class="ot">FALSE</span>,                 <span class="co"># avoid creating a new plot</span>
+          <span class="dt">col =</span> <span class="kw">c</span>(<span class="st">"grey95"</span>, <span class="st">"grey10"</span>),     <span class="co"># color background grey</span>
+          <span class="dt">idcol =</span> <span class="kw">c</span>(<span class="st">"firebrick"</span>, <span class="st">"yellow"</span>) <span class="co"># color highlight red and yellow</span>
+          )</code></pre></div>
 <p><img src="getting-started_files/figure-html/ex1_show-1.png" width="1000px" height="500px"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">par</span>(<span class="dt">mfrow =</span> <span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>))</code></pre></div>
 </div>

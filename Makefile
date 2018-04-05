@@ -13,5 +13,5 @@ doc :
 check : doc build
 	R -q -e "devtools::check()"
 
-html : build
+html : build README.md
 	R -q -e "pkgdown::build_site()"

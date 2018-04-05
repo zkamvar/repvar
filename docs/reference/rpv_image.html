@@ -84,6 +84,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
       
       <ul class="nav navbar-nav navbar-right">
@@ -109,8 +112,8 @@
     <p>Create an image of the data matrix</p>
     
 
-    <pre class="usage"><span class='fu'>rpv_image</span>(<span class='no'>tab</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>highlight</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"powderblue"</span>,
-  <span class='st'>"grey10"</span>), <span class='kw'>idcol</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"firebrick"</span>))</pre>
+    <pre class="usage"><span class='fu'>rpv_image</span>(<span class='no'>tab</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>highlight</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='kw'>newplot</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>col</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"powderblue"</span>, <span class='st'>"grey10"</span>), <span class='kw'>idcol</span> <span class='kw'>=</span> <span class='fu'>c</span>(<span class='st'>"yellow"</span>, <span class='st'>"firebrick"</span>))</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,6 +131,11 @@ this is used to split the matrix up by groups for analysis.</p></td>
       <th>highlight</th>
       <td><p>a character vector specifing which row names or indices to
 highlight.</p></td>
+    </tr>
+    <tr>
+      <th>newplot</th>
+      <td><p>When <code>TRUE</code> (default), The image will not over-write the
+previous image. Turn this off if you want to use multi-panel plotting.</p></td>
     </tr>
     <tr>
       <th>col</th>
@@ -153,7 +161,7 @@ presence/absence of a variable, but does not represent the dosage.</p>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>data</span>(<span class='no'>monilinia</span>)
 <span class='no'>loci</span> <span class='kw'>&lt;-</span> <span class='fu'>sapply</span>(<span class='fu'>strsplit</span>(<span class='fu'>colnames</span>(<span class='no'>monilinia</span>), <span class='st'>"[.]"</span>), <span class='st'>"["</span>, <span class='fl'>1</span>)
-<span class='fu'>rpv_image</span>(<span class='no'>monilinia</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>loci</span>)</div><div class='input'><span class='fu'>rpv_image</span>(<span class='no'>monilinia</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>loci</span>, <span class='kw'>highlight</span> <span class='kw'>=</span> <span class='fu'><a href='rpv_indices.html'>rpv_indices</a></span>(<span class='no'>monilinia</span>))</div><div class='img'><img src='rpv_image-1.png' alt='' width='700' height='433' /></div></pre>
+<span class='fu'>rpv_image</span>(<span class='no'>monilinia</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>loci</span>)</div><div class='img'><img src='rpv_image-1.png' alt='' width='700' height='433' /></div><div class='input'><span class='fu'>rpv_image</span>(<span class='no'>monilinia</span>, <span class='kw'>f</span> <span class='kw'>=</span> <span class='no'>loci</span>, <span class='kw'>highlight</span> <span class='kw'>=</span> <span class='fu'><a href='rpv_indices.html'>rpv_indices</a></span>(<span class='no'>monilinia</span>))</div><div class='img'><img src='rpv_image-2.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

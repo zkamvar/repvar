@@ -154,7 +154,7 @@ However, if we shuffle the data set:
 ```{r ex1_shuffle}
 set.seed(2018)
 monilinia_shuffled <- monilinia[sample(nrow(monilinia)), ]
-rpv_image(monilinia, f = loci) # shuffled data
+rpv_image(monilinia_shuffled, f = loci) # shuffled data
 ```
 
 We get a different answer:
@@ -163,11 +163,15 @@ We get a different answer:
 print(new_ids <- rpv_indices(monilinia_shuffled))
 par(mfrow = c(1, 2))
 rpv_image(monilinia, f = loci, highlight = new_ids, 
-          col = c("grey95", "grey10"),
-          idcol = c("firebrick", "yellow"))
+          newplot = FALSE,                 # avoid creating a new plot
+          col = c("grey95", "grey10"),     # color background grey
+          idcol = c("firebrick", "yellow") # color highlight red and yellow
+          )
 rpv_image(monilinia, f = loci, highlight = ids, 
-          col = c("grey95", "grey10"),
-          idcol = c("firebrick", "yellow"))
+          newplot = FALSE,                 # avoid creating a new plot
+          col = c("grey95", "grey10"),     # color background grey
+          idcol = c("firebrick", "yellow") # color highlight red and yellow
+          )
 par(mfrow = c(1, 1))
 ```
 
